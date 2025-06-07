@@ -1,5 +1,5 @@
 list points;
-key notecardKey;
+integer notecard;
 integer notecardLine;
 string notecardName;
 vector home;
@@ -14,12 +14,42 @@ default
         {
             llSay(0, "No notecard found in the object inventory.");
             return;
-        } else {
+        } 
+        else 
+        {
             notecardName = llGetInventoryName(INVENTORY_NOTECARD, 0);
-            notecardKey = llGetNotecardLine(notecardName, notecardLine);
+
+            do 
+            {
+                string result = llGetNotecardLineSync(notecardName, notecardLine);
+                if(result == NAK) { 
+                    notecard = TRUE;
+                    llGetNumberOfNotecardLines(notecardName);
+                    llSleep(4/45.); 
+                }
+                else if(result == EOF) { 
+                    notecard = FALSE;
+                    llSetLinkPrimitiveParamsFast(LINK_THIS, [ PRIM_CLICK_ACTION,CLICK_ACTION_SIT]);
+                    llSay(0, "Successfully loaded " + (string)llGetListLength(points) + " teleport points from the notecard.");
+                }
+                else 
+                {
+                    list lineData = llParseStringKeepNulls(result, ["/"], []);
+                    float x = llList2Float(lineData, -3);
+                    float y = llList2Float(lineData, -2);
+                    float z = llList2Float(lineData, -1);
+                    vector point = <x, y, z>;
+                    if(point != ZERO_VECTOR)
+                    {
+                        points += point;
+                    }
+                    notecard = TRUE;
+                    notecardLine++;
+                }
+            }
+            while(notecard);
         }
     }
-
     changed(integer change)
     {
         if(change & CHANGED_LINK)
@@ -55,38 +85,6 @@ default
             }
 
             llResetScript();
-        }
-    }
-
-
-    dataserver(key queryid, string data)
-    {
-        if(queryid == notecardKey)
-        {
-            if(data == EOF)
-            {
-                // Finished reading notecard
-                llSetLinkPrimitiveParamsFast(LINK_THIS, [ PRIM_CLICK_ACTION,CLICK_ACTION_SIT]);
-                llSay(0, "Successfully loaded " + (string)llGetListLength(points) + " teleport points from the notecard.");
-            }
-            else
-            {
-                // Process the notecard data
-                list lineData = llParseStringKeepNulls(data, ["/"], []);
-                float x = llList2Float(lineData, -3);
-                float y = llList2Float(lineData, -2);
-                float z = llList2Float(lineData, -1);
-                vector point = <x, y, z>;
-                if(point != ZERO_VECTOR)
-                {
-                    //llSay(0, "Loaded point: " + (string)point);
-                    points += point;
-                }
-                // Request the next line from the notecard
-                notecardLine++;
-                notecardKey = llGetNotecardLine(notecardName, notecardLine);
-                
-            }
         }
     }
 }
