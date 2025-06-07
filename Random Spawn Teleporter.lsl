@@ -37,7 +37,7 @@ default
                 llSetRegionPos(home);
             }
         }
-        else if(change & CHANGED_INVENTORY)
+        if(change & CHANGED_INVENTORY)
         {
             llSay(0, "Inventory changed. Reloading script.");
             if(llGetPos() != home) {
@@ -47,7 +47,7 @@ default
 
             llResetScript();
         }
-        else if(change & CHANGED_REGION_START)
+        if(change & CHANGED_REGION_START)
         {
             if(llGetPos() != home) {
                 llSetRegionPos(home);
