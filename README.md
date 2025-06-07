@@ -10,6 +10,10 @@ Scripted sit teleporter with notecard configured spawn locations
     
 4. Once you create and save the notecard place it inside the object you created. It will be loaded automatically 
 
+
+
+
+
 The script will report in local chat how many spawn locations were loaded or any errors
 
 Once setup is completed avatars simply need to click the object and it will transport them to a random spawn from the list you created
