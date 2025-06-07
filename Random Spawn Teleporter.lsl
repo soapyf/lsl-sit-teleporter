@@ -7,6 +7,7 @@ default
 {
     state_entry()
     {
+        llForceMouselook( TRUE );
         llSetLinkPrimitiveParamsFast(LINK_THIS, [ PRIM_CLICK_ACTION,CLICK_ACTION_NONE, PRIM_SIT_TARGET , TRUE, <0, 0, 1>, ZERO_ROTATION ]);
         home = llGetPos(); 
 
