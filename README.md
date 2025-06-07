@@ -1,5 +1,6 @@
 # lsl-random-teleporter
-Scripted sit teleporter with notecard configured spawn locations
+Scripted sit teleporter with notecard configured spawn locations.
+Locations are configured using "SLurls" entered into a notecard which is placed into the contents of a scripted object.
 
 
 ## Setup
