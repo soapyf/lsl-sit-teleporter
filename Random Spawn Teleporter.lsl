@@ -9,7 +9,7 @@ integer use_safestPoint = TRUE; // Set to TRUE to use the safest teleport point 
 integer getSafestPoint() {
     list agents = llGetAgentList(AGENT_LIST_REGION, []);
     integer agent_count = llGetListLength(agents);
-    if (agent_count == 0) {
+    if (agent_count < 0) {
         return -1; // No agents in the region
     }
 
