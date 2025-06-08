@@ -3,6 +3,42 @@ integer notecard;
 integer notecardLine;
 string notecardName;
 vector home;
+
+integer use_safestPoint = TRUE; // Set to TRUE to use the safest teleport point calculation
+// Calculates the safest teleport point based on the average distance from all agents in the region
+integer getSafestPoint() {
+    list agents = llGetAgentList(AGENT_LIST_REGION, []);
+    integer agent_count = llGetListLength(agents);
+    if (agent_count == 0) {
+        return -1; // No agents in the region
+    }
+
+    float max_avg_distance = -1.0;
+    integer safest_point_index = -1;
+
+    integer point_count = llGetListLength(points);
+    integer i;
+    for (i = 0; i < point_count; i++) {
+        vector point = llList2Vector(points, i);
+        float total_distance = 0.0;
+
+        integer j;
+        for (j = 0; j < agent_count; j++) {
+            key agent = llList2Key(agents, j);
+            vector agent_pos = llList2Vector(llGetObjectDetails(agent, [OBJECT_POS]), 0);
+            total_distance += llVecDist(point, agent_pos);
+        }
+
+        float avg_distance = total_distance / agent_count;
+        if (avg_distance > max_avg_distance) {
+            max_avg_distance = avg_distance;
+            safest_point_index = i;
+        }
+    }
+
+    return safest_point_index;
+}
+
 default
 {
     state_entry()
@@ -58,7 +94,12 @@ default
             key agent = llAvatarOnSitTarget();
             if(agent != NULL_KEY)
             {
-                integer index = llFloor(llFrand(llGetListLength(points)));
+                integer index;
+                if(use_safestPoint){
+                    index = getSafestPoint();
+                } else {
+                    index = llFloor(llFrand(llGetListLength(points)));
+                }
                 llSetRegionPos(llList2Vector(points, index));
                 llSleep(0.1); // Allow time for the object to move
                 llUnSit(agent);
