@@ -4,6 +4,7 @@ integer notecardLine;
 string notecardName;
 vector home;
 
+integer force_mouselook = TRUE; // Should avatars be forced into mouselook when using the teleporter?
 integer use_safestPoint = TRUE; // Set to TRUE to use the safest teleport point calculation
 // Calculates the safest teleport point based on the average distance from all agents in the region
 integer getSafestPoint() {
@@ -43,7 +44,9 @@ default
 {
     state_entry()
     {
-        llForceMouselook( TRUE );
+        if(force_mouselook){
+            llForceMouselook( TRUE );
+        }
         llSetLinkPrimitiveParamsFast(LINK_THIS, [ PRIM_CLICK_ACTION,CLICK_ACTION_NONE, PRIM_SIT_TARGET , TRUE, <0, 0, 1>, ZERO_ROTATION ]);
         home = llGetPos(); 
 
