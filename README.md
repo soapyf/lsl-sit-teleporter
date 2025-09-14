@@ -3,6 +3,8 @@ Scripted sit teleporter with notecard configured teleport locations.
 
 Supports single or multiple locations.
 
+If multiple locations are entered they are chosen at random when an avatar sits.
+
 Locations are configured using "SLurls" entered into a notecard which is placed into the contents of a scripted object.
 
 
